@@ -11,22 +11,38 @@ class Pagina1Page extends StatelessWidget {
       appBar: AppBar(
         title: Text('Pagina 1'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () => context.read<UsuarioCubit>().borrarUsuario(),
+            icon: Icon(Icons.exit_to_app),
+          )
+        ],
       ),
-      body: BlocBuilder<UsuarioCubit, UsuarioState>(
-        builder: (_, state) {
-          print(state);
-          if (state is UsuarioInitial) {
-            return Center(child: Text('No hay información del usuario'));
-          } else if (state is UsuarioActivo){
-            return InformacionUsuario(state.usario);
-          }
-          return Center(child: Text('No hay información del usuario'));
-        },
-      ),
+      body: BodyScaffold(),
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.pushNamed(context, 'pagina2'),
-        child: Icon(Icons.chevron_left),
+        child: Icon(Icons.chevron_right),
       ),
+    );
+  }
+}
+
+class BodyScaffold extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<UsuarioCubit, UsuarioState>(
+      builder: (_, state) {
+        switch (state.runtimeType) {
+          case UsuarioInitial:
+            return Center(child: Text('No hay información del usuario'));
+
+          case UsuarioActivo:
+            return InformacionUsuario((state as UsuarioActivo).usario);
+
+          default:
+            return Center(child: Text('Estado no reconocido'));
+        }
+      },
     );
   }
 }
@@ -34,7 +50,7 @@ class Pagina1Page extends StatelessWidget {
 class InformacionUsuario extends StatelessWidget {
   final Usuario usuario;
 
-  const InformacionUsuario( this.usuario);
+  const InformacionUsuario(this.usuario);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -52,9 +68,18 @@ class InformacionUsuario extends StatelessWidget {
           Text('Profesiones',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           Divider(),
-          ListTile(title: Text('Profesion 1')),
-          ListTile(title: Text('Profesion 1')),
-          ListTile(title: Text('Profesion 1')),
+          usuario.profesiones != null
+              ? Container(
+                  width: double.infinity * 0.9,
+                  height: 300,
+                  child: ListView.builder(
+                    itemCount: usuario.profesiones!.length,
+                    itemBuilder: (_, int index) {
+                      return ListTile(title: Text(usuario.profesiones![index]));
+                    },
+                  ),
+                )
+              : Text('Sin profesion'),
         ],
       ),
     );
