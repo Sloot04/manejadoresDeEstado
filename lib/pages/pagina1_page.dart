@@ -11,6 +11,14 @@ class Pagina1Page extends StatelessWidget {
       appBar: AppBar(
         title: Text('Pagina 1'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {
+              BlocProvider.of<UsuarioBloc>(context).add(BorrarUsuario());
+            },
+            icon: Icon(Icons.exit_to_app),
+          )
+        ],
       ),
       body: BlocBuilder<UsuarioBloc, UsuarioState>(
         builder: (_, state) {
@@ -34,7 +42,7 @@ class Pagina1Page extends StatelessWidget {
 class InformacionUsuario extends StatelessWidget {
   final Usuario usuario;
 
-  const InformacionUsuario( this.usuario);
+  const InformacionUsuario(this.usuario);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -52,7 +60,18 @@ class InformacionUsuario extends StatelessWidget {
           Text('Profesiones',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           Divider(),
-          
+          usuario.profesiones != null
+              ? Container(
+                  width: double.infinity * 0.9,
+                  height: 300,
+                  child: ListView.builder(
+                    itemCount: usuario.profesiones!.length,
+                    itemBuilder: (_, int index) {
+                      return ListTile(title: Text(usuario.profesiones![index]));
+                    },
+                  ),
+                )
+              : Text('Sin profesion'),
         ],
       ),
     );

@@ -12,7 +12,15 @@ class UsuarioBloc extends Bloc<UsuarioEvent, UsuarioState> {
   @override
   Stream<UsuarioState> mapEventToState(UsuarioEvent event) async* {
     if (event is ActivarUsuario) {
-      yield UsuarioState(user: event.usuario);
+      yield state.copyWith(usuario: event.usuario);
+    } else if (event is CambiarEdad) {
+      yield state.copyWith(usuario: state.usuario!.copyWith(edad: event.edad));
+    } else if (event is AgregarProfesion) {
+      yield state.copyWith(
+          usuario: state.usuario!.copyWith(
+              profesiones: [...state.usuario!.profesiones!, event.profesion]));
+    } else if (event is BorrarUsuario) {
+      yield state.estadoInicial();
     }
   }
 }
