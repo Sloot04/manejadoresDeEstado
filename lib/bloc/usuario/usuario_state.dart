@@ -2,7 +2,7 @@
 part of 'usuario_bloc.dart';
 
 class UsuarioState {
-  final existeUsuario;
+  final bool existeUsuario;
   final Usuario? usuario;
 
   UsuarioState({Usuario? user})
