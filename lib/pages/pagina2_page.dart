@@ -15,7 +15,7 @@ class _Pagina2PageState extends State<Pagina2Page> {
     final usuarioCubit = context.read<UsuarioCubit>();
     return Scaffold(
       appBar: AppBar(
-        title: (usuarioCubit.state.runtimeType == UsuarioActivo)
+        title: (usuarioCubit.state is UsuarioActivo)
             ? Text((usuarioCubit.state as UsuarioActivo).usario.nombre)
             : Text('Pagina 2'),
         centerTitle: true,
